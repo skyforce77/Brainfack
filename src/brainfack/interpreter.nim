@@ -1,7 +1,10 @@
-#Récupération de la fonction getchhar du langage C
+#Récupération de la fonction getchar du langage C
 proc getchar*(): int {.importc: "getchar", header: "stdio.h", cdecl, discardable.}
 
-#définition du tableau de valeurs et de son pointeur
+#Définition de la pile de boucles
+var loopSeq = newSeq[int]()
+
+#Définition du tableau de valeurs et de son pointeur
 var memory: array[30000, int]
 var pointer: int = 0
 
@@ -14,19 +17,17 @@ proc startWhile(code: string, index: var int) =
         of '[': discover+=1
         of ']': discover-=1
         else: discard
+  else:
+    loopSeq.add(index)
 
 proc endWhile(code: string, index: var int) =
   if memory[pointer] != 0:
-    var discover = 1
-    while discover != 0 and index > 0:
-      dec(index)
-      case code[index]
-        of '[': discover-=1
-        of ']': discover+=1
-        else: discard
+    index = loopSeq.pop()-1
+  else:
+    discard loopSeq.pop()
 
 proc incPointer() =
-  if pointer < 30000:
+  if pointer < 30000-1:
     pointer+=1
 
 proc decPointer() =
