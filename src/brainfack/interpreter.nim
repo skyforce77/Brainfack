@@ -11,7 +11,6 @@ proc startWhile(code: string, index: var int) =
         of '[': discover+=1
         of ']': discover-=1
         else: discard
-    dec(index)
 
 proc endWhile(code: string, index: var int) =
   if memory[pointer] != 0:
@@ -22,7 +21,6 @@ proc endWhile(code: string, index: var int) =
         of '[': discover-=1
         of ']': discover+=1
         else: discard
-    dec(index)
 
 proc incPointer() =
   if pointer < 30000:
@@ -44,7 +42,7 @@ proc writeValue() =
   write(stdout, char(memory[pointer]))
 
 proc interpret*(code: string) =
-  var index: int = 1
+  var index: int = 0
   while index<(code.len-1):
     case code[index]:
       of '>': incPointer()
