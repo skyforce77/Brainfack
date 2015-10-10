@@ -1,3 +1,6 @@
+#Récupération de la fonction getchhar du langage C
+proc getchar*(): int {.importc: "getchar", header: "stdio.h", cdecl, discardable.}
+
 #définition du tableau de valeurs et de son pointeur
 var memory: array[30000, int]
 var pointer: int = 0
@@ -41,6 +44,9 @@ proc decValue() =
 proc writeValue() =
   write(stdout, char(memory[pointer]))
 
+proc readValue() =
+  memory[pointer] = getchar()
+
 proc interpret*(code: string) =
   var index: int = 0
   while index<(code.len-1):
@@ -52,5 +58,6 @@ proc interpret*(code: string) =
       of '[': startWhile(code, index)
       of ']': endWhile(code, index)
       of '.': writeValue()
+      of ',': readValue()
       else: discard
     inc(index)
