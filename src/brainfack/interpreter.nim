@@ -1,6 +1,3 @@
-#importation de la fonction putchar du langage C
-proc putchar*(c: cchar): cchar {.importc: "putchar", header: "stdio.h", cdecl, discardable.}
-
 #définition du tableau de valeurs et de son pointeur
 var memory: array[30000, int8]
 var pointer: int16 = 0
@@ -13,7 +10,7 @@ proc startWhile(code: string, index: int) =
         of '[': discover+=1
         of ']': discover-=1
         else: discard
-      #incrémenter index ici
+      #inc(index)
 
 proc endWhile(code: string, index: int) =
   echo("end: ", $index) #todo
@@ -28,6 +25,6 @@ proc interpret*(code: string) =
       of '-': memory[pointer]-=1
       of '[': startWhile(code, index)
       of ']': endWhile(code, index)
-      of '.': putchar(char(memory[pointer]))
+      of '.': write(stdout, char(memory[pointer]))
       else: discard
     inc(index)
