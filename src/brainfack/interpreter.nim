@@ -1,30 +1,58 @@
 #définition du tableau de valeurs et de son pointeur
-var memory: array[30000, int8]
-var pointer: int16 = 0
+var memory: array[30000, int]
+var pointer: int = 0
 
-proc startWhile(code: string, index: int) =
-  if memory[pointer] != 0:
+proc startWhile(code: string, index: var int) =
+  if memory[pointer] == 0:
     var discover = 1
-    while discover != 0:
+    while discover != 0 and index < code.len:
+      inc(index)
       case code[index]
         of '[': discover+=1
         of ']': discover-=1
         else: discard
-      #inc(index)
+    dec(index)
 
-proc endWhile(code: string, index: int) =
-  echo("end: ", $index) #todo
+proc endWhile(code: string, index: var int) =
+  if memory[pointer] != 0:
+    var discover = 1
+    while discover != 0 and index > 0:
+      dec(index)
+      case code[index]
+        of '[': discover-=1
+        of ']': discover+=1
+        else: discard
+    dec(index)
+
+proc incPointer() =
+  if pointer < 30000:
+    pointer+=1
+
+proc decPointer() =
+  if pointer > 0:
+    pointer-=1
+
+proc incValue() =
+  if memory[pointer] < 255:
+    memory[pointer]+=1
+
+proc decValue() =
+  if memory[pointer] > 0:
+    memory[pointer]-=1
+
+proc writeValue() =
+  write(stdout, char(memory[pointer]))
 
 proc interpret*(code: string) =
   var index: int = 1
   while index<(code.len-1):
     case code[index]:
-      of '>': pointer+=1
-      of '<': pointer-=1
-      of '+': memory[pointer]+=1
-      of '-': memory[pointer]-=1
+      of '>': incPointer()
+      of '<': decPointer()
+      of '+': incValue()
+      of '-': decValue()
       of '[': startWhile(code, index)
       of ']': endWhile(code, index)
-      of '.': write(stdout, char(memory[pointer]))
+      of '.': writeValue()
       else: discard
     inc(index)
