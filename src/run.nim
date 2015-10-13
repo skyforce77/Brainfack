@@ -1,5 +1,5 @@
 when isMainModule:
-  import brainfack.interpreter, docopt, os, times
+  import brainfack.interpreter, docopt, os
 
   const help = """
 Usage:
@@ -10,7 +10,6 @@ Usage:
   if args["<file>"]:
     if fileExists($args["<file>"]):
       interpret(readFile($args["<file>"]))
-      echo cpuTime()
     else:
       echo "file does not exists"
   else:
